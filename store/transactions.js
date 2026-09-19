@@ -1,7 +1,20 @@
 export const state = () => ({
   list: [],
-  isLoading: false
+  isLoading: false,
+  searchQuery: ''
 })
+
+export const getters = {
+  filteredList: (state) => {
+    if (!state.searchQuery) return state.list;
+    
+    const query = state.searchQuery.toLowerCase();
+    return state.list.filter(trx => 
+      trx.id.toLowerCase().includes(query) || 
+      trx.title.toLowerCase().includes(query)
+    );
+  }
+}
 
 export const mutations = {
   SET_TRANSACTIONS(state, data) {
@@ -9,25 +22,31 @@ export const mutations = {
   },
   SET_LOADING(state, status) {
     state.isLoading = status
+  },
+  SET_SEARCH_QUERY(state, query) {
+    state.searchQuery = query
   }
 }
 
 export const actions = {
-  async fetchTransactions({ commit }) {
+  async fetchTransactions({ commit }, $axios) {
     commit('SET_LOADING', true)
     
-    const response = await new Promise(resolve => {
-      setTimeout(() => {
-        resolve([
-          { id: 'TRX-9821', amount: 50000000, type: 'واریز حقوق', status: 'موفق' },
-          { id: 'TRX-9822', amount: 12500000, type: 'خرید تجهیزات', status: 'در انتظار تایید' },
-          { id: 'TRX-9823', amount: 450000, type: 'شارژ حساب', status: 'موفق' },
-          { id: 'TRX-9824', amount: 200000, type: 'پرداخت قبض', status: 'موفق' }
-        ])
-      }, 500)
-    })
+    try {
+      const response = await $axios.$get('https://jsonplaceholder.typicode.com/posts?_limit=6')
+      
+      const normalizedData = response.map(item => ({
+        id: `TRX-${item.id * 1050}`,
+        amount: item.userId * 2500000,
+        title: item.title.split(' ').slice(0, 3).join(' '),
+        status: item.id % 2 === 0 ? 'موفق' : 'ناموفق'
+      }))
 
-    commit('SET_TRANSACTIONS', response)
-    commit('SET_LOADING', false)
+      commit('SET_TRANSACTIONS', normalizedData)
+    } catch (error) {
+      console.error('خطا در دریافت اطلاعات:', error)
+    } finally {
+      commit('SET_LOADING', false)
+    }
   }
 }
