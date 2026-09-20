@@ -55,7 +55,7 @@
           >
             <td class="px-4 py-3 font-mono text-gray-500">{{ trx.id }}</td>
             <td class="px-4 py-3 font-semibold">
-              {{ trx.amount.toLocaleString() }}
+              {{ formatCurrency(trx.amount) }}
             </td>
             <td class="px-4 py-3">{{ trx.title }}</td>
             <td class="px-4 py-3">
@@ -83,15 +83,18 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import currencyMixin from "~/mixins/currencyMixin";
 
 export default {
   name: "DashboardPage",
 
+  middleware: "auth",
+
+  mixins: [currencyMixin],
+
   async asyncData({ store, $axios }) {
     await store.dispatch("transactions/fetchTransactions", $axios);
   },
-
-  middleware: "auth",
 
   computed: {
     ...mapState(["user"]),
