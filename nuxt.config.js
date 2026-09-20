@@ -38,7 +38,15 @@ export default {
   modules: [
     '@nuxtjs/axios',
     'cookie-universal-nuxt',
+    '@nuxtjs/toast'
   ],
+
+  toast: {
+    position: 'bottom-right',
+    duration: 3000,
+    keepOnHover: true,
+    theme: 'bubble'
+  },
 
   axios: {
     baseURL: '/',
