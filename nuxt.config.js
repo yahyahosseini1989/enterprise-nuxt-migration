@@ -36,6 +36,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
+    'cookie-universal-nuxt',
   ],
 
   axios: {
