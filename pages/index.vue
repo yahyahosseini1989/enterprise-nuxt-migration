@@ -55,10 +55,12 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'DashboardPage',
-
+  
   async asyncData({ store, $axios }) {
     await store.dispatch('transactions/fetchTransactions', $axios)
   },
+
+  middleware: 'auth',
 
   computed: {
     ...mapState(['user']),
