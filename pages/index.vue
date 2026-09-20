@@ -11,6 +11,12 @@
             <span class="font-bold text-blue-600">{{ user.name }}</span>
           </div>
           <button
+            @click="testExpiredToken"
+            class="text-sm text-orange-500 hover:text-orange-700 transition border border-orange-500 px-2 py-1 rounded"
+          >
+            تست انقضای توکن (۴۰۱)
+          </button>
+          <button
             @click="handleLogout"
             class="text-sm text-red-500 hover:text-red-700 font-semibold transition"
           >
@@ -107,6 +113,19 @@ export default {
     handleLogout() {
       this.$store.dispatch("logout");
       this.$router.push("/login");
+    },
+    async testExpiredToken() {
+      try {
+        await this.$axios.get("https://api.github.com/user", {
+          headers: {
+            Authorization: "Bearer fake_expired_token_12345",
+          },
+        });
+      } catch (error) {
+        // این بلاک اجرا نمی‌شود چون پلاگین ما در فایل axios.js قبل از رسیدن خطا به اینجا،
+        // استیت را پاک کرده و کاربر را به /login ریدایرکت می‌کند.
+        console.log("این پیام چاپ نمی‌شود");
+      }
     },
   },
 };
