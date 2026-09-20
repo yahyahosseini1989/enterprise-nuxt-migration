@@ -45,7 +45,7 @@
 <script>
 export default {
   name: 'LoginPage',
-  
+  layout: 'auth',
   data() {
     return {
       username: '',

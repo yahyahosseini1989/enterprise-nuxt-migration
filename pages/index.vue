@@ -53,7 +53,9 @@
             :key="trx.id"
             class="border-b hover:bg-gray-50 transition"
           >
-            <td class="px-4 py-3 font-mono text-gray-500">{{ trx.id }}</td>
+            <td class="px-4 py-3 font-mono text-blue-500 hover:underline cursor-pointer">
+              <nuxt-link :to="`/transactions/${trx.id}`">{{ trx.id }}</nuxt-link>
+            </td>
             <td class="px-4 py-3 font-semibold">
               {{ formatCurrency(trx.amount) }}
             </td>
